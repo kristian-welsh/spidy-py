@@ -13,16 +13,24 @@ Content-Length: {1}
 
 {0}""".format(responseBody, len(responseBody))
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-	s.bind((HOST, PORT))
-	s.listen()
-	conn, addr = s.accept()
-	with conn:
-		print('Connected by', addr)
-		while True:
-			data = conn.recv(2048)
-			if not data:
-				break;
-			conn.sendall(bytearray(response, "UTF-8"))
+class Server:
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
+    def listen(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind((self.host, self.port))
+            s.listen()
+            conn, addr = s.accept()
+            with conn:
+                print('Connected by', addr)
+                while True:
+                    data = conn.recv(2048)
+                    if not data:
+                        break;
+                    conn.sendall(bytearray(response, "UTF-8"))
+
+Server(HOST, PORT).listen()
 
 
