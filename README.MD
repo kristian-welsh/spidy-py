@@ -1,2 +1,2 @@
-This is a webserver, built for the purpose of learning python.
+This is a REST webserver, built for the purpose of learning python.
 
