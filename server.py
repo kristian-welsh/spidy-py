@@ -1,7 +1,7 @@
 import socket
 
 HOST = '127.0.0.1'
-PORT = 8080
+PORT = 9531
 RESPONSE_BODY = """<html>
 <head></head>
 <body>
@@ -65,14 +65,15 @@ class Server:
             print('# incoming connection from: ', address)
             self.processConnection(connection)
             connection.close()
+            print('# connection closed: ', address)
 
     def processConnection(self, connection):
         request = self.parseRequest(connection)
         response = self.generateResponse(request)
-        print('## request: ', request)
-        print('## response: ', response)
         self.sendResponse(response, connection)
         connection.close()
+        print('## request: ', request)
+        print('## response: ', response)
 
     def parseRequest(self, conn):
         data = conn.recv(8)
