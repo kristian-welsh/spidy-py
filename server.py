@@ -72,20 +72,17 @@ class Server:
         response = self.generateResponse(request)
         self.sendResponse(response, connection)
         connection.close()
-        print('## request: ', request)
-        print('## response: ', response)
 
-    def parseRequest(self, conn):
-        total_data = ''
-
-        print('recieving request')
-        while '\r\n\r\n' not in total_data:
-            data = conn.recv(2048)
-            total_data += data.decode()
+    def parseRequest(self, connection):
+        data = ''
+        while not self.requestComplete(data):
+            data += connection.recv(2048).decode()
         print('request recieved')
-        print(total_data)
+        print(data)
+        return Request(data)
 
-        return Request(str(total_data))
+    def requestComplete(self, request):
+        return '\r\n\r\n' in request or '\n\n' in request
 
     def generateResponse(self, request):
         responder = self.router.findResponder(request)
@@ -94,6 +91,8 @@ class Server:
 
     def sendResponse(self, response, connection):
         connection.sendall(bytearray(str(response), "UTF-8"))
+        print('response sent:')
+        print(str(response))
 
 Server(HOST, PORT, Router()).run()
 
