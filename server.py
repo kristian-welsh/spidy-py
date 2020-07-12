@@ -76,8 +76,16 @@ class Server:
         print('## response: ', response)
 
     def parseRequest(self, conn):
-        data = conn.recv(8)
-        return Request(str(data))
+        total_data = ''
+
+        print('recieving request')
+        while '\r\n\r\n' not in total_data:
+            data = conn.recv(2048)
+            total_data += data.decode()
+        print('request recieved')
+        print(total_data)
+
+        return Request(str(total_data))
 
     def generateResponse(self, request):
         responder = self.router.findResponder(request)
