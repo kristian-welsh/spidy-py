@@ -1,46 +1,5 @@
 import socket
-
-HOST = '127.0.0.1'
-PORT = 9531
-RESPONSE_BODY = """<html>
-<head></head>
-<body>
-<marquee>hello!</marquee>
-</body>
-</html>"""
-RESPONSE_HEAD = """HTTP/1.1 200 OK
-Content-Length: {0}
-Connection: close
-""".format(len(RESPONSE_BODY))
-
-class Responder:
-    def process(self, request):
-        return Response(RESPONSE_HEAD, RESPONSE_BODY)
-
-class Router:
-    def findResponder(self, request):
-        return {
-            "/": Responder()
-        }[request.route()]
-
-class Request:
-    def __init__(self, text):
-        self.text = text
-    def __str__(self):
-        return self.text
-    def route(self):
-        return "/"
-    def method(self):
-        return "GET"
-
-class Response:
-    def __init__(self, head, body):
-        self.head = head
-        self.body = body
-    def __str__(self):
-        return self.head + "\n" + self.body
-    def code(self):
-        return "200"
+import model
 
 class Server:
     def __init__(self, host, port, router):
@@ -79,7 +38,7 @@ class Server:
             data += connection.recv(2048).decode()
         print('request recieved')
         print(data)
-        return Request(data)
+        return model.Request(data)
 
     def requestComplete(self, request):
         return '\r\n\r\n' in request or '\n\n' in request
@@ -93,6 +52,4 @@ class Server:
         connection.sendall(bytearray(str(response), "UTF-8"))
         print('response sent:')
         print(str(response))
-
-Server(HOST, PORT, Router()).run()
 
