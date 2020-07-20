@@ -10,14 +10,15 @@ class Parser:
 
     def parse(self, data):
         head, body = tuple(data.split(self.newL + self.newL))
-        method, uri, protocol = self.firstLine(head).split(' ')
-        headers = self.parseHeaders(head)
+        request_line, header_strings = self.splitLines(head)
+        method, uri, protocol = request_line.split(' ')
+        headers = self.parseHeaders(header_strings)
         return Request(data)
 
-    def firstLine(self, head):
-        return head.split(self.newL)[0]
+    def splitLines(self, head):
+        lines = head.split(self.newL)
+        return (lines[0], lines[1:])
 
-    def parseHeaders(self, head):
-        headers = head.split(self.newL)[1:]
+    def parseHeaders(self, headers):
         return dict([tuple(header.split(': ')) for header in headers])
 
