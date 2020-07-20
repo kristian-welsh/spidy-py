@@ -1,5 +1,6 @@
 import socket
 import model
+from parsing import parse
 
 class Server:
     def __init__(self, host, port, router):
@@ -38,7 +39,7 @@ class Server:
             data += connection.recv(2048).decode()
         print('request recieved')
         print(data)
-        return model.Request(data)
+        return parse(data)
 
     def requestComplete(self, request):
         return '\r\n\r\n' in request or '\n\n' in request
