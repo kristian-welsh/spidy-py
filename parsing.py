@@ -1,10 +1,13 @@
 from model import Request
 
+
 def parse(data):
     newL = '\r\n' if '\r\n' in data else '\n'
     return Parser(newL).parse(data)
 
+
 class Parser:
+
     def __init__(self, newL):
         self.newL = newL
 
@@ -25,4 +28,3 @@ class Parser:
 
     def parseHeaders(self, headers):
         return dict([tuple(header.split(': ')) for header in headers])
-

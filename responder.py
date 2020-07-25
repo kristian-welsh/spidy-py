@@ -11,7 +11,8 @@ Content-Length: {0}
 Connection: close
 """.format(len(RESPONSE_BODY))
 
+
 class Responder:
+
     def process(self, request):
         return model.Response(RESPONSE_HEAD, RESPONSE_BODY)
-

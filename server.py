@@ -2,7 +2,9 @@ import socket
 import model
 from parsing import parse
 
+
 class Server:
+
     def __init__(self, host, port, router):
         self.host = host
         self.port = port
@@ -53,4 +55,3 @@ class Server:
         connection.sendall(bytearray(str(response), "UTF-8"))
         print('response sent:')
         print(str(response))
-
