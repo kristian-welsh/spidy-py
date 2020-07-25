@@ -1,8 +1,8 @@
 from model import Request
 
 def parse(data):
-    parser = Parser('\r\n') if '\r\n' in data else Parser('\n')
-    return parser.parse(data)
+    newL = '\r\n' if '\r\n' in data else '\n'
+    return Parser(newL).parse(data)
 
 class Parser:
     def __init__(self, newL):
@@ -10,10 +10,14 @@ class Parser:
 
     def parse(self, data):
         head, body = tuple(data.split(self.newL + self.newL))
-        request_line, header_strings = self.splitLines(head)
-        method, uri, protocol = request_line.split(' ')
-        headers = self.parseHeaders(header_strings)
+        method, uri, protocol, headers = self.parseHead(head)
         return Request(data)
+
+    def parseHead(self, head):
+        request_line, header_lines = self.splitLines(head)
+        method, uri, protocol = request_line.split(' ')
+        headers = self.parseHeaders(header_lines)
+        return (method, uri, protocol, headers)
 
     def splitLines(self, head):
         lines = head.split(self.newL)
